@@ -1,3 +1,6 @@
 /BusStop.class
 /Connectors.class
 /Node.class
+/Details.class
+/stop_times.class
+/stops.class

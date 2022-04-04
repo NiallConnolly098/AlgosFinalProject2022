@@ -8,6 +8,6 @@ public class Node {
 		this.cost = cost;
 	}
 	public void printNode() {
-		System.out.println("Stop id - " + stopID + " Cost - " + cost);
+		System.out.println("Stop id: " + stopID + " Cost: " + cost);
 	}
 }

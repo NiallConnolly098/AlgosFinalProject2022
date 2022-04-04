@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 public class Connectors {
 	public static HashMap<Integer, ArrayList<Node>> adjacencies;
-    public static HashMap<Integer, BusStop> MapDetails;
+    public static HashMap<Integer, stops> MapDetails;
     public static void Maps() {
     	adjacencies = new HashMap<>();
     	MapDetails = new HashMap<>();
@@ -86,7 +86,7 @@ public class Connectors {
         			int location_type = (line[8].equals("") || line[8].equals(" ")) ? empty : Integer.parseInt(line[8]);
         			String parent_station = (line.length == 9) ? emptyString : line[9];
         			
-        			newStop(new BusStop(stop_id, stop_code, stop_name, stop_desc, stop_lat, stop_lon, 
+        			newStop(new stops(stop_id, stop_code, stop_name, stop_desc, stop_lat, stop_lon, 
         					zone_id, stop_url,location_type, parent_station));
         		}
         		lineCount=lineCount+1;
@@ -120,7 +120,7 @@ public class Connectors {
         else return stopName;
     }
     
-    public static void newStop(BusStop stop) {
+    public static void newStop(stops stop) {
         adjacencies.put(stop.stop_id, new ArrayList<>());
         MapDetails.put(stop.stop_id, stop);
     }
@@ -208,11 +208,11 @@ public class Connectors {
     	return null;
     }
     
-    public ArrayList<BusStop> findVisitedStops(ArrayList<Integer> stopIDs){
-        ArrayList<BusStop> StopDetails = new ArrayList<>();
+    public ArrayList<stops> findVisitedStops(ArrayList<Integer> stopIDs){
+        ArrayList<stops> StopDetails = new ArrayList<>();
         System.out.println("Visited Stops");
         for(int stop : stopIDs){
-            BusStop stopDetails = MapDetails.get(stop);
+            stops stopDetails = MapDetails.get(stop);
             System.out.println("stop_id - " + stopDetails.stop_id + ", stop_name - " + stopDetails.stop_name);
             StopDetails.add(stopDetails);
         }
