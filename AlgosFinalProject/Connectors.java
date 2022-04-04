@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.util.HashSet;
 
 public class Connectors {
 	public static HashMap<Integer, ArrayList<Node>> adjacencies;
@@ -128,5 +129,93 @@ public class Connectors {
     	Maps();
     	readTransfers(transfers);
     	readStops(stops);
+    }
+    
+    private static double costOfShortest;
+    public static double findCostOfShortest() {
+    	return costOfShortest;
+    }
+    
+    public static boolean validStopID(int stop_id) {
+    	return adjacencies.keySet().contains(stop_id);
+    }
+    
+    public static ArrayList<Integer> findShortest(int from_stop_id, int to_stop_id){
+    	if(validStopID(from_stop_id) && validStopID(to_stop_id)){
+    		if(from_stop_id == to_stop_id){
+    			System.out.println("Same stop");
+    			costOfShortest = Double.NEGATIVE_INFINITY;
+    			return null;
+    		}
+    		HashSet<Integer> visited = new HashSet<>(adjacencies.size());
+    		HashMap<Integer, Integer> prev = new HashMap<>(adjacencies.size());
+    		HashMap<Integer, Double> dist = new HashMap<>(adjacencies.size());
+    		for (int i : adjacencies.keySet()) {
+    			prev.put(i, Integer.MAX_VALUE);
+    			visited.add(i);
+                dist.put(i, Double.POSITIVE_INFINITY);
+            }
+    		dist.put(from_stop_id, 0.0);
+    		while (!visited.isEmpty()) {
+    			int curr = Integer.MAX_VALUE;
+                double min = Double.POSITIVE_INFINITY;
+                for(int i : visited) {
+                	double j = dist.get(i);
+                	if(j<min) {
+                		min = j;
+                		curr = i;
+                	}
+                }
+                if(curr == Integer.MAX_VALUE) break;
+                visited.remove(curr);
+                if(curr == to_stop_id) break;
+                ArrayList<Node> adjacent = adjacencies.get(curr);
+                if(adjacent != null) {
+                	for(Node adj : adjacent) {
+                		if(adj.cost != Double.POSITIVE_INFINITY && dist.get(curr) != null) {
+                			double adjDist = dist.get(curr) + adj.cost;
+                			if(dist.get(adj.stopID)> adjDist) {
+                				dist.put(adj.stopID, adjDist);
+                				prev.put(adj.stopID, curr);
+                			}
+                		}
+                	}
+                }
+    		}
+    		
+    		ArrayList<Integer> shortest = new ArrayList<>();
+    		int stop = to_stop_id;
+    		if (prev.get(stop) != null) {
+                if (prev.get(stop) != Integer.MAX_VALUE || stop == from_stop_id) {
+                    while (stop != Integer.MAX_VALUE) {
+                        shortest.add(0, stop);
+                        stop = prev.get(stop);
+                    }
+                }
+            }
+    		if (dist.get(to_stop_id) != null)
+                costOfShortest = dist.get(to_stop_id);
+
+            return shortest;
+    	}
+    	if (!validStopID(from_stop_id)) {
+            System.out.println(from_stop_id + " is an invalid stop id");
+    	}
+    	if (!validStopID(to_stop_id)) {
+            System.out.println(to_stop_id +" is an invalid stop id");
+    	}
+    	costOfShortest = -1.0;
+    	return null;
+    }
+    
+    public ArrayList<BusStop> findVisitedStops(ArrayList<Integer> stopIDs){
+        ArrayList<BusStop> StopDetails = new ArrayList<>();
+        System.out.println("Visited Stops");
+        for(int stop : stopIDs){
+            BusStop stopDetails = MapDetails.get(stop);
+            System.out.println("stop_id - " + stopDetails.stop_id + ", stop_name - " + stopDetails.stop_name);
+            StopDetails.add(stopDetails);
+        }
+        return StopDetails;
     }
 }
