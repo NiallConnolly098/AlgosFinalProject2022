@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.util.HashSet;
 
-public class Connectors {
-	public static HashMap<Integer, ArrayList<Node>> adjacencies;
+public class Edge {
+	public static HashMap<Integer, ArrayList<edgeNode>> adjacencies;
     public static HashMap<Integer, stops> MapDetails;
     public static void Maps() {
     	adjacencies = new HashMap<>();
     	MapDetails = new HashMap<>();
     }
-    public Connectors() {
+    public Edge() {
     	Maps();
     }
     
@@ -53,14 +53,14 @@ public class Connectors {
     	catch(Exception e){
     		System.out.println(e);
     	}
-    	System.out.println("Line count - " + lineCount);
+    	System.out.println("File 'transfers' read, lineCount: " + lineCount);
     	br.close();
     }
     
     public static void Connect(int from_stop_id, int to_stop_id, double cost) {
         adjacencies.computeIfAbsent(from_stop_id, k -> new ArrayList<>());
         adjacencies.computeIfAbsent(to_stop_id, k -> new ArrayList<>());
-        adjacencies.get(from_stop_id).add(new Node(cost, to_stop_id));
+        adjacencies.get(from_stop_id).add(new edgeNode(cost, to_stop_id));
     }
     
     private static void readStops(File stops) throws IOException{
@@ -95,7 +95,7 @@ public class Connectors {
         catch(Exception e) {
         	System.out.println(e);
         }
-        System.out.println("Line count - " + lineCount);
+        System.out.println("File 'stops' read, lineCount: " + lineCount);
         br.close();
     }
     
@@ -125,19 +125,10 @@ public class Connectors {
         MapDetails.put(stop.stop_id, stop);
     }
     
-    public Connectors(File stops, File transfers) throws IOException{
+    public Edge(File stops, File transfers) throws IOException{
     	Maps();
     	readTransfers(transfers);
     	readStops(stops);
-    }
-    
-    private static double costOfShortest;
-    public static double findCostOfShortest() {
-    	return costOfShortest;
-    }
-    
-    public static boolean validStopID(int stop_id) {
-    	return adjacencies.keySet().contains(stop_id);
     }
     
     public static ArrayList<Integer> findShortest(int from_stop_id, int to_stop_id){
@@ -169,9 +160,9 @@ public class Connectors {
                 if(curr == Integer.MAX_VALUE) break;
                 visited.remove(curr);
                 if(curr == to_stop_id) break;
-                ArrayList<Node> adjacent = adjacencies.get(curr);
+                ArrayList<edgeNode> adjacent = adjacencies.get(curr);
                 if(adjacent != null) {
-                	for(Node adj : adjacent) {
+                	for(edgeNode adj : adjacent) {
                 		if(adj.cost != Double.POSITIVE_INFINITY && dist.get(curr) != null) {
                 			double adjDist = dist.get(curr) + adj.cost;
                 			if(dist.get(adj.stopID)> adjDist) {
@@ -217,5 +208,14 @@ public class Connectors {
             StopDetails.add(stopDetails);
         }
         return StopDetails;
+    }
+    
+    private static double costOfShortest;
+    public static double findCostOfShortest() {
+    	return costOfShortest;
+    }
+    
+    public static boolean validStopID(int stop_id) {
+    	return adjacencies.keySet().contains(stop_id);
     }
 }

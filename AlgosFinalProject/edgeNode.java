@@ -1,9 +1,9 @@
 
-public class Node {
+public class edgeNode {
 	public double cost;
 	public int stopID;
 	
-	public Node(double cost, int stopID) {
+	public edgeNode(double cost, int stopID) {
 		this.stopID = stopID;
 		this.cost = cost;
 	}

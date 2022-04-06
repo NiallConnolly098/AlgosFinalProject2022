@@ -4,3 +4,9 @@
 /Details.class
 /stop_times.class
 /stops.class
+/Route.class
+/EdgeNode.class
+/TreeNode.class
+/Edge.class
+/edgeNode.class
+/Tree.class
