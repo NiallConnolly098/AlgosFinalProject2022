@@ -99,25 +99,25 @@ public class Edge {
         br.close();
     }
     
-    public static String moveKeywords(String stopName) {
-    	int keyLength = 2;
-        int flagLength = 8;
-        String temp = stopName.substring(0, keyLength).trim().toUpperCase();
-        String tempFlag = stopName.substring(0, flagLength).trim().toUpperCase();
+    public static String moveKeywords(String stop) {
+    	int keyword = 2;
+        int flagstop = 8;
+        String temp = stop.substring(0, keyword).trim().toUpperCase();
+        String tempFlag = stop.substring(0, flagstop).trim().toUpperCase();
         
         if (temp.equals("WB") || temp.equals("NB") || temp.equals("SB") || temp.equals("EB")) {
-            String end = stopName.substring(keyLength + 1);
-            String start = stopName.substring(0, keyLength);
+            String end = stop.substring(keyword + 1);
+            String start = stop.substring(0, keyword);
             String movedString = end.concat(" ").concat(start);
             return moveKeywords(movedString);
         }
         if (tempFlag.equals("FLAGSTOP")) {
-            String lastPart = stopName.substring(flagLength + 1);
-            String firstPart = stopName.substring(0, flagLength);
+            String lastPart = stop.substring(flagstop + 1);
+            String firstPart = stop.substring(0, flagstop);
             String movedString = lastPart.concat(" ").concat(firstPart);
             return moveKeywords(movedString);
         }
-        else return stopName;
+        else return stop;
     }
     
     public static void newStop(stops stop) {
@@ -131,7 +131,7 @@ public class Edge {
     	readStops(stops);
     }
     
-    public static ArrayList<Integer> findShortest(int from_stop_id, int to_stop_id){
+    public ArrayList<Integer> findShortest(int from_stop_id, int to_stop_id){
     	if(validStopID(from_stop_id) && validStopID(to_stop_id)){
     		if(from_stop_id == to_stop_id){
     			System.out.println("Same stop");
